@@ -10,7 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProblemsRouteImport } from './routes/problems'
+import { Route as LearnRouteImport } from './routes/learn'
+import { Route as LeaderboardRouteImport } from './routes/leaderboard'
+import { Route as EnglishToCodeRouteImport } from './routes/english-to-code'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProfileUsernameRouteImport } from './routes/profile.$username'
 import { Route as ProblemsIdRouteImport } from './routes/problems.$id'
 
 const ProblemsRoute = ProblemsRouteImport.update({
@@ -18,9 +22,29 @@ const ProblemsRoute = ProblemsRouteImport.update({
   path: '/problems',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnRoute = LearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeaderboardRoute = LeaderboardRouteImport.update({
+  id: '/leaderboard',
+  path: '/leaderboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnglishToCodeRoute = EnglishToCodeRouteImport.update({
+  id: '/english-to-code',
+  path: '/english-to-code',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileUsernameRoute = ProfileUsernameRouteImport.update({
+  id: '/profile/$username',
+  path: '/profile/$username',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProblemsIdRoute = ProblemsIdRouteImport.update({
@@ -31,31 +55,69 @@ const ProblemsIdRoute = ProblemsIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/english-to-code': typeof EnglishToCodeRoute
+  '/leaderboard': typeof LeaderboardRoute
+  '/learn': typeof LearnRoute
   '/problems': typeof ProblemsRouteWithChildren
   '/problems/$id': typeof ProblemsIdRoute
+  '/profile/$username': typeof ProfileUsernameRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/english-to-code': typeof EnglishToCodeRoute
+  '/leaderboard': typeof LeaderboardRoute
+  '/learn': typeof LearnRoute
   '/problems': typeof ProblemsRouteWithChildren
   '/problems/$id': typeof ProblemsIdRoute
+  '/profile/$username': typeof ProfileUsernameRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/english-to-code': typeof EnglishToCodeRoute
+  '/leaderboard': typeof LeaderboardRoute
+  '/learn': typeof LearnRoute
   '/problems': typeof ProblemsRouteWithChildren
   '/problems/$id': typeof ProblemsIdRoute
+  '/profile/$username': typeof ProfileUsernameRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/problems' | '/problems/$id'
+  fullPaths:
+    | '/'
+    | '/english-to-code'
+    | '/leaderboard'
+    | '/learn'
+    | '/problems'
+    | '/problems/$id'
+    | '/profile/$username'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/problems' | '/problems/$id'
-  id: '__root__' | '/' | '/problems' | '/problems/$id'
+  to:
+    | '/'
+    | '/english-to-code'
+    | '/leaderboard'
+    | '/learn'
+    | '/problems'
+    | '/problems/$id'
+    | '/profile/$username'
+  id:
+    | '__root__'
+    | '/'
+    | '/english-to-code'
+    | '/leaderboard'
+    | '/learn'
+    | '/problems'
+    | '/problems/$id'
+    | '/profile/$username'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  EnglishToCodeRoute: typeof EnglishToCodeRoute
+  LeaderboardRoute: typeof LeaderboardRoute
+  LearnRoute: typeof LearnRoute
   ProblemsRoute: typeof ProblemsRouteWithChildren
+  ProfileUsernameRoute: typeof ProfileUsernameRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -67,11 +129,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProblemsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn': {
+      id: '/learn'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof LearnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/leaderboard': {
+      id: '/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leaderboard'
+      preLoaderRoute: typeof LeaderboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/english-to-code': {
+      id: '/english-to-code'
+      path: '/english-to-code'
+      fullPath: '/english-to-code'
+      preLoaderRoute: typeof EnglishToCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/$username': {
+      id: '/profile/$username'
+      path: '/profile/$username'
+      fullPath: '/profile/$username'
+      preLoaderRoute: typeof ProfileUsernameRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/problems/$id': {
@@ -98,7 +188,11 @@ const ProblemsRouteWithChildren = ProblemsRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  EnglishToCodeRoute: EnglishToCodeRoute,
+  LeaderboardRoute: LeaderboardRoute,
+  LearnRoute: LearnRoute,
   ProblemsRoute: ProblemsRouteWithChildren,
+  ProfileUsernameRoute: ProfileUsernameRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
