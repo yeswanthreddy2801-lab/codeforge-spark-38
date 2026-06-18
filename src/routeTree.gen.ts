@@ -19,6 +19,7 @@ import { Route as ContestsRouteImport } from './routes/contests'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProfileUsernameRouteImport } from './routes/profile.$username'
 import { Route as ProblemsIdRouteImport } from './routes/problems.$id'
+import { Route as LearnTopicRouteImport } from './routes/learn.$topic'
 import { Route as ContestsIdRouteImport } from './routes/contests.$id'
 
 const ProfileRoute = ProfileRouteImport.update({
@@ -71,6 +72,11 @@ const ProblemsIdRoute = ProblemsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => ProblemsRoute,
 } as any)
+const LearnTopicRoute = LearnTopicRouteImport.update({
+  id: '/$topic',
+  path: '/$topic',
+  getParentRoute: () => LearnRoute,
+} as any)
 const ContestsIdRoute = ContestsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -83,10 +89,11 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/english-to-code': typeof EnglishToCodeRoute
   '/leaderboard': typeof LeaderboardRoute
-  '/learn': typeof LearnRoute
+  '/learn': typeof LearnRouteWithChildren
   '/problems': typeof ProblemsRouteWithChildren
   '/profile': typeof ProfileRouteWithChildren
   '/contests/$id': typeof ContestsIdRoute
+  '/learn/$topic': typeof LearnTopicRoute
   '/problems/$id': typeof ProblemsIdRoute
   '/profile/$username': typeof ProfileUsernameRoute
 }
@@ -96,10 +103,11 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/english-to-code': typeof EnglishToCodeRoute
   '/leaderboard': typeof LeaderboardRoute
-  '/learn': typeof LearnRoute
+  '/learn': typeof LearnRouteWithChildren
   '/problems': typeof ProblemsRouteWithChildren
   '/profile': typeof ProfileRouteWithChildren
   '/contests/$id': typeof ContestsIdRoute
+  '/learn/$topic': typeof LearnTopicRoute
   '/problems/$id': typeof ProblemsIdRoute
   '/profile/$username': typeof ProfileUsernameRoute
 }
@@ -110,10 +118,11 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/english-to-code': typeof EnglishToCodeRoute
   '/leaderboard': typeof LeaderboardRoute
-  '/learn': typeof LearnRoute
+  '/learn': typeof LearnRouteWithChildren
   '/problems': typeof ProblemsRouteWithChildren
   '/profile': typeof ProfileRouteWithChildren
   '/contests/$id': typeof ContestsIdRoute
+  '/learn/$topic': typeof LearnTopicRoute
   '/problems/$id': typeof ProblemsIdRoute
   '/profile/$username': typeof ProfileUsernameRoute
 }
@@ -129,6 +138,7 @@ export interface FileRouteTypes {
     | '/problems'
     | '/profile'
     | '/contests/$id'
+    | '/learn/$topic'
     | '/problems/$id'
     | '/profile/$username'
   fileRoutesByTo: FileRoutesByTo
@@ -142,6 +152,7 @@ export interface FileRouteTypes {
     | '/problems'
     | '/profile'
     | '/contests/$id'
+    | '/learn/$topic'
     | '/problems/$id'
     | '/profile/$username'
   id:
@@ -155,6 +166,7 @@ export interface FileRouteTypes {
     | '/problems'
     | '/profile'
     | '/contests/$id'
+    | '/learn/$topic'
     | '/problems/$id'
     | '/profile/$username'
   fileRoutesById: FileRoutesById
@@ -165,7 +177,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   EnglishToCodeRoute: typeof EnglishToCodeRoute
   LeaderboardRoute: typeof LeaderboardRoute
-  LearnRoute: typeof LearnRoute
+  LearnRoute: typeof LearnRouteWithChildren
   ProblemsRoute: typeof ProblemsRouteWithChildren
   ProfileRoute: typeof ProfileRouteWithChildren
 }
@@ -242,6 +254,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProblemsIdRouteImport
       parentRoute: typeof ProblemsRoute
     }
+    '/learn/$topic': {
+      id: '/learn/$topic'
+      path: '/$topic'
+      fullPath: '/learn/$topic'
+      preLoaderRoute: typeof LearnTopicRouteImport
+      parentRoute: typeof LearnRoute
+    }
     '/contests/$id': {
       id: '/contests/$id'
       path: '/$id'
@@ -263,6 +282,16 @@ const ContestsRouteChildren: ContestsRouteChildren = {
 const ContestsRouteWithChildren = ContestsRoute._addFileChildren(
   ContestsRouteChildren,
 )
+
+interface LearnRouteChildren {
+  LearnTopicRoute: typeof LearnTopicRoute
+}
+
+const LearnRouteChildren: LearnRouteChildren = {
+  LearnTopicRoute: LearnTopicRoute,
+}
+
+const LearnRouteWithChildren = LearnRoute._addFileChildren(LearnRouteChildren)
 
 interface ProblemsRouteChildren {
   ProblemsIdRoute: typeof ProblemsIdRoute
@@ -293,7 +322,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   EnglishToCodeRoute: EnglishToCodeRoute,
   LeaderboardRoute: LeaderboardRoute,
-  LearnRoute: LearnRoute,
+  LearnRoute: LearnRouteWithChildren,
   ProblemsRoute: ProblemsRouteWithChildren,
   ProfileRoute: ProfileRouteWithChildren,
 }
