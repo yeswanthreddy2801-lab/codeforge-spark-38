@@ -58,7 +58,7 @@ function ProblemsPage() {
   const currentPage = filters.page ?? 1;
 
   const setQ = (q: string) =>
-    navigate({ search: (p) => ({ ...p, q: q || undefined, page: 1 }) });
+    navigate({ search: (p: z.infer<typeof searchSchema>) => ({ ...p, q: q || undefined, page: 1 }) });
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -129,7 +129,7 @@ function ProblemsPage() {
                   key={d}
                   active={(search.difficulty ?? "All") === d}
                   onClick={() =>
-                    navigate({ search: (p) => ({ ...p, difficulty: d, page: 1 }) })
+                    navigate({ search: (p: z.infer<typeof searchSchema>) => ({ ...p, difficulty: d, page: 1 }) })
                   }
                   variant={d === "Easy" ? "success" : d === "Medium" ? "warning" : d === "Hard" ? "error" : "default"}
                 >
@@ -143,7 +143,7 @@ function ProblemsPage() {
                 <Pill
                   key={s}
                   active={(search.status ?? "All") === s}
-                  onClick={() => navigate({ search: (p) => ({ ...p, status: s, page: 1 }) })}
+                  onClick={() => navigate({ search: (p: z.infer<typeof searchSchema>) => ({ ...p, status: s, page: 1 }) })}
                 >
                   {s}
                 </Pill>
@@ -159,7 +159,7 @@ function ProblemsPage() {
                       key={t}
                       onClick={() =>
                         navigate({
-                          search: (p) => ({
+                          search: (p: z.infer<typeof searchSchema>) => ({
                             ...p,
                             tags: active
                               ? (p.tags ?? []).filter((x) => x !== t)
@@ -267,7 +267,7 @@ function ProblemsPage() {
         <div className="mt-6 flex items-center justify-center gap-2">
           <button
             disabled={currentPage <= 1}
-            onClick={() => navigate({ search: (p) => ({ ...p, page: currentPage - 1 }) })}
+            onClick={() => navigate({ search: (p: z.infer<typeof searchSchema>) => ({ ...p, page: currentPage - 1 }) })}
             className="grid size-9 place-items-center rounded-lg border border-card bg-surface text-text-secondary disabled:opacity-30 hover:text-text-primary"
           >
             <ChevronLeft className="size-4" />
@@ -277,7 +277,7 @@ function ProblemsPage() {
             return (
               <button
                 key={n}
-                onClick={() => navigate({ search: (p) => ({ ...p, page: n }) })}
+                onClick={() => navigate({ search: (p: z.infer<typeof searchSchema>) => ({ ...p, page: n }) })}
                 className={cn(
                   "grid size-9 place-items-center rounded-lg text-sm font-medium",
                   n === currentPage
@@ -291,7 +291,7 @@ function ProblemsPage() {
           })}
           <button
             disabled={currentPage >= totalPages}
-            onClick={() => navigate({ search: (p) => ({ ...p, page: currentPage + 1 }) })}
+            onClick={() => navigate({ search: (p: z.infer<typeof searchSchema>) => ({ ...p, page: currentPage + 1 }) })}
             className="grid size-9 place-items-center rounded-lg border border-card bg-surface text-text-secondary disabled:opacity-30 hover:text-text-primary"
           >
             <ChevronRight className="size-4" />
