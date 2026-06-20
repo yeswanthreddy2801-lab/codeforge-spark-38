@@ -7,7 +7,7 @@ import {
 import {
   BookOpen, Calendar, Flame, Lock, MapPin, Sword, Star, Timer, Trophy, Zap, Layers,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PROFILE } from "@/data/profile";
 import { VerdictBadge } from "@/components/ui/VerdictBadge";
 import { cn } from "@/lib/utils";
@@ -32,6 +32,11 @@ type Tab = "Overview" | "Submissions" | "Achievements";
 function ProfilePage() {
   const [tab, setTab] = useState<Tab>("Overview");
   const [verdictFilter, setVerdictFilter] = useState<string>("All");
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const filteredSubs = useMemo(() => {
     if (verdictFilter === "All") return PROFILE.recentSubmissions;
@@ -100,15 +105,19 @@ function ProfilePage() {
             <div className="space-y-5">
               <div className="rounded-2xl border border-card bg-surface p-5">
                 <h3 className="mb-4 font-display text-lg font-semibold text-text-primary">Weekly Submissions</h3>
-                <ResponsiveContainer width="100%" height={240}>
-                  <BarChart data={PROFILE.weeklyData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-                    <XAxis dataKey="day" stroke="#94a3b8" fontSize={12} />
-                    <YAxis stroke="#94a3b8" fontSize={12} />
-                    <Tooltip contentStyle={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8 }} />
-                    <Bar dataKey="submissions" fill="#06b6d4" radius={[6, 6, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+                {isClient ? (
+                  <ResponsiveContainer width="100%" height={240}>
+                    <BarChart data={PROFILE.weeklyData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+                      <XAxis dataKey="day" stroke="#94a3b8" fontSize={12} />
+                      <YAxis stroke="#94a3b8" fontSize={12} />
+                      <Tooltip contentStyle={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8 }} />
+                      <Bar dataKey="submissions" fill="#06b6d4" radius={[6, 6, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="h-[240px] w-full animate-pulse bg-card/50 rounded-xl" />
+                )}
               </div>
               <div className="overflow-hidden rounded-2xl border border-card bg-surface">
                 <div className="border-b border-card px-5 py-4">
@@ -120,15 +129,19 @@ function ProfilePage() {
             <div className="space-y-5">
               <div className="rounded-2xl border border-card bg-surface p-5">
                 <h3 className="mb-4 font-display text-lg font-semibold text-text-primary">Difficulty Breakdown</h3>
-                <ResponsiveContainer width="100%" height={220}>
-                  <PieChart>
-                    <Pie data={PROFILE.difficultyData} dataKey="count" nameKey="name" innerRadius={50} outerRadius={85} paddingAngle={3}>
-                      {PROFILE.difficultyData.map((d) => <Cell key={d.name} fill={d.color} />)}
-                    </Pie>
-                    <Tooltip contentStyle={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8 }} />
-                    <Legend wrapperStyle={{ fontSize: 12, color: "#94a3b8" }} />
-                  </PieChart>
-                </ResponsiveContainer>
+                {isClient ? (
+                  <ResponsiveContainer width="100%" height={220}>
+                    <PieChart>
+                      <Pie data={PROFILE.difficultyData} dataKey="count" nameKey="name" innerRadius={50} outerRadius={85} paddingAngle={3}>
+                        {PROFILE.difficultyData.map((d) => <Cell key={d.name} fill={d.color} />)}
+                      </Pie>
+                      <Tooltip contentStyle={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8 }} />
+                      <Legend wrapperStyle={{ fontSize: 12, color: "#94a3b8" }} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="h-[220px] w-full animate-pulse bg-card/50 rounded-xl" />
+                )}
               </div>
               <div className="rounded-2xl border border-card bg-surface p-5">
                 <h3 className="font-display text-lg font-semibold text-text-primary">Active Since</h3>

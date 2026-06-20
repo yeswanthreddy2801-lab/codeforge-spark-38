@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer,
@@ -23,6 +24,11 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 function DashboardPage() {
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const recommended = PROBLEMS.filter((p) => p.difficulty === "Medium" && !p.isSolved).slice(0, 3);
 
   return (
@@ -45,27 +51,35 @@ function DashboardPage() {
       {/* Charts */}
       <div className="mt-8 grid gap-4 lg:grid-cols-2">
         <ChartCard title="Weekly Submissions">
-          <ResponsiveContainer width="100%" height={260}>
-            <BarChart data={PROFILE.weeklyData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-              <XAxis dataKey="day" stroke="#94a3b8" fontSize={12} />
-              <YAxis stroke="#94a3b8" fontSize={12} />
-              <Tooltip contentStyle={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8 }} />
-              <Bar dataKey="submissions" fill="#06b6d4" radius={[6, 6, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+          {isClient ? (
+            <ResponsiveContainer width="100%" height={260}>
+              <BarChart data={PROFILE.weeklyData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+                <XAxis dataKey="day" stroke="#94a3b8" fontSize={12} />
+                <YAxis stroke="#94a3b8" fontSize={12} />
+                <Tooltip contentStyle={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8 }} />
+                <Bar dataKey="submissions" fill="#06b6d4" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-[260px] w-full animate-pulse bg-card/50 rounded-xl" />
+          )}
         </ChartCard>
 
         <ChartCard title="Difficulty Breakdown">
-          <ResponsiveContainer width="100%" height={260}>
-            <PieChart>
-              <Pie data={PROFILE.difficultyData} dataKey="count" nameKey="name" innerRadius={60} outerRadius={95} paddingAngle={3}>
-                {PROFILE.difficultyData.map((d) => <Cell key={d.name} fill={d.color} />)}
-              </Pie>
-              <Tooltip contentStyle={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8 }} />
-              <Legend wrapperStyle={{ fontSize: 12, color: "#94a3b8" }} />
-            </PieChart>
-          </ResponsiveContainer>
+          {isClient ? (
+            <ResponsiveContainer width="100%" height={260}>
+              <PieChart>
+                <Pie data={PROFILE.difficultyData} dataKey="count" nameKey="name" innerRadius={60} outerRadius={95} paddingAngle={3}>
+                  {PROFILE.difficultyData.map((d) => <Cell key={d.name} fill={d.color} />)}
+                </Pie>
+                <Tooltip contentStyle={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8 }} />
+                <Legend wrapperStyle={{ fontSize: 12, color: "#94a3b8" }} />
+              </PieChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-[260px] w-full animate-pulse bg-card/50 rounded-xl" />
+          )}
         </ChartCard>
       </div>
 
