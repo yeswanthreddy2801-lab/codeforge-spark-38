@@ -87,7 +87,7 @@ function DashboardPage() {
       <div className="mt-8 overflow-hidden rounded-2xl border border-card bg-surface">
         <div className="flex items-center justify-between border-b border-card px-5 py-4">
           <h2 className="font-display text-lg font-semibold text-text-primary">Recent Submissions</h2>
-          <Link to="/profile" className="text-sm text-primary hover:underline">View all →</Link>
+          <Link to="/profile/" className="text-sm text-primary hover:underline">View all →</Link>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

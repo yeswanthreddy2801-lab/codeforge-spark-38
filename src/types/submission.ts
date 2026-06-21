@@ -24,7 +24,7 @@ export interface Verdict {
 }
 
 export interface SubmitPayload {
-  problemId: string;
+  problemId?: string;
   language: Language;
   code: string;
 }

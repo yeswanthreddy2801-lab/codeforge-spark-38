@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import type { Language } from "@/types/submission";
 
 const Monaco = lazy(() => import("@monaco-editor/react"));
@@ -26,6 +26,20 @@ export function MonacoEditorWrapper({
   height = "100%",
   readOnly = false,
 }: Props) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className="grid h-full w-full place-items-center bg-background font-mono text-sm text-text-secondary">
+        Loading editor…
+      </div>
+    );
+  }
+
   return (
     <Suspense
       fallback={

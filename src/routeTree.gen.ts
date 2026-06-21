@@ -15,12 +15,13 @@ import { Route as LearnRouteImport } from './routes/learn'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as EnglishToCodeRouteImport } from './routes/english-to-code'
 import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as ContestsRouteImport } from './routes/contests'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProfileIndexRouteImport } from './routes/profile.index'
+import { Route as ProblemsIndexRouteImport } from './routes/problems.index'
+import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as ProfileUsernameRouteImport } from './routes/profile.$username'
 import { Route as ProblemsIdRouteImport } from './routes/problems.$id'
 import { Route as LearnTopicRouteImport } from './routes/learn.$topic'
-import { Route as ContestsIdRouteImport } from './routes/contests.$id'
 
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
@@ -52,15 +53,25 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ContestsRoute = ContestsRouteImport.update({
-  id: '/contests',
-  path: '/contests',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileIndexRoute = ProfileIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProfileRoute,
+} as any)
+const ProblemsIndexRoute = ProblemsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProblemsRoute,
+} as any)
+const LearnIndexRoute = LearnIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LearnRoute,
 } as any)
 const ProfileUsernameRoute = ProfileUsernameRouteImport.update({
   id: '/$username',
@@ -77,103 +88,97 @@ const LearnTopicRoute = LearnTopicRouteImport.update({
   path: '/$topic',
   getParentRoute: () => LearnRoute,
 } as any)
-const ContestsIdRoute = ContestsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => ContestsRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/contests': typeof ContestsRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/english-to-code': typeof EnglishToCodeRoute
   '/leaderboard': typeof LeaderboardRoute
   '/learn': typeof LearnRouteWithChildren
   '/problems': typeof ProblemsRouteWithChildren
   '/profile': typeof ProfileRouteWithChildren
-  '/contests/$id': typeof ContestsIdRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/problems/$id': typeof ProblemsIdRoute
   '/profile/$username': typeof ProfileUsernameRoute
+  '/learn/': typeof LearnIndexRoute
+  '/problems/': typeof ProblemsIndexRoute
+  '/profile/': typeof ProfileIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/contests': typeof ContestsRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/english-to-code': typeof EnglishToCodeRoute
   '/leaderboard': typeof LeaderboardRoute
-  '/learn': typeof LearnRouteWithChildren
-  '/problems': typeof ProblemsRouteWithChildren
-  '/profile': typeof ProfileRouteWithChildren
-  '/contests/$id': typeof ContestsIdRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/problems/$id': typeof ProblemsIdRoute
   '/profile/$username': typeof ProfileUsernameRoute
+  '/learn': typeof LearnIndexRoute
+  '/problems': typeof ProblemsIndexRoute
+  '/profile': typeof ProfileIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/contests': typeof ContestsRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/english-to-code': typeof EnglishToCodeRoute
   '/leaderboard': typeof LeaderboardRoute
   '/learn': typeof LearnRouteWithChildren
   '/problems': typeof ProblemsRouteWithChildren
   '/profile': typeof ProfileRouteWithChildren
-  '/contests/$id': typeof ContestsIdRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/problems/$id': typeof ProblemsIdRoute
   '/profile/$username': typeof ProfileUsernameRoute
+  '/learn/': typeof LearnIndexRoute
+  '/problems/': typeof ProblemsIndexRoute
+  '/profile/': typeof ProfileIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/contests'
     | '/dashboard'
     | '/english-to-code'
     | '/leaderboard'
     | '/learn'
     | '/problems'
     | '/profile'
-    | '/contests/$id'
     | '/learn/$topic'
     | '/problems/$id'
     | '/profile/$username'
+    | '/learn/'
+    | '/problems/'
+    | '/profile/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/contests'
     | '/dashboard'
     | '/english-to-code'
     | '/leaderboard'
-    | '/learn'
-    | '/problems'
-    | '/profile'
-    | '/contests/$id'
     | '/learn/$topic'
     | '/problems/$id'
     | '/profile/$username'
+    | '/learn'
+    | '/problems'
+    | '/profile'
   id:
     | '__root__'
     | '/'
-    | '/contests'
     | '/dashboard'
     | '/english-to-code'
     | '/leaderboard'
     | '/learn'
     | '/problems'
     | '/profile'
-    | '/contests/$id'
     | '/learn/$topic'
     | '/problems/$id'
     | '/profile/$username'
+    | '/learn/'
+    | '/problems/'
+    | '/profile/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ContestsRoute: typeof ContestsRouteWithChildren
   DashboardRoute: typeof DashboardRoute
   EnglishToCodeRoute: typeof EnglishToCodeRoute
   LeaderboardRoute: typeof LeaderboardRoute
@@ -226,19 +231,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/contests': {
-      id: '/contests'
-      path: '/contests'
-      fullPath: '/contests'
-      preLoaderRoute: typeof ContestsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/profile/': {
+      id: '/profile/'
+      path: '/'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof ProfileIndexRouteImport
+      parentRoute: typeof ProfileRoute
+    }
+    '/problems/': {
+      id: '/problems/'
+      path: '/'
+      fullPath: '/problems/'
+      preLoaderRoute: typeof ProblemsIndexRouteImport
+      parentRoute: typeof ProblemsRoute
+    }
+    '/learn/': {
+      id: '/learn/'
+      path: '/'
+      fullPath: '/learn/'
+      preLoaderRoute: typeof LearnIndexRouteImport
+      parentRoute: typeof LearnRoute
     }
     '/profile/$username': {
       id: '/profile/$username'
@@ -261,44 +280,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnTopicRouteImport
       parentRoute: typeof LearnRoute
     }
-    '/contests/$id': {
-      id: '/contests/$id'
-      path: '/$id'
-      fullPath: '/contests/$id'
-      preLoaderRoute: typeof ContestsIdRouteImport
-      parentRoute: typeof ContestsRoute
-    }
   }
 }
 
-interface ContestsRouteChildren {
-  ContestsIdRoute: typeof ContestsIdRoute
-}
-
-const ContestsRouteChildren: ContestsRouteChildren = {
-  ContestsIdRoute: ContestsIdRoute,
-}
-
-const ContestsRouteWithChildren = ContestsRoute._addFileChildren(
-  ContestsRouteChildren,
-)
-
 interface LearnRouteChildren {
   LearnTopicRoute: typeof LearnTopicRoute
+  LearnIndexRoute: typeof LearnIndexRoute
 }
 
 const LearnRouteChildren: LearnRouteChildren = {
   LearnTopicRoute: LearnTopicRoute,
+  LearnIndexRoute: LearnIndexRoute,
 }
 
 const LearnRouteWithChildren = LearnRoute._addFileChildren(LearnRouteChildren)
 
 interface ProblemsRouteChildren {
   ProblemsIdRoute: typeof ProblemsIdRoute
+  ProblemsIndexRoute: typeof ProblemsIndexRoute
 }
 
 const ProblemsRouteChildren: ProblemsRouteChildren = {
   ProblemsIdRoute: ProblemsIdRoute,
+  ProblemsIndexRoute: ProblemsIndexRoute,
 }
 
 const ProblemsRouteWithChildren = ProblemsRoute._addFileChildren(
@@ -307,10 +311,12 @@ const ProblemsRouteWithChildren = ProblemsRoute._addFileChildren(
 
 interface ProfileRouteChildren {
   ProfileUsernameRoute: typeof ProfileUsernameRoute
+  ProfileIndexRoute: typeof ProfileIndexRoute
 }
 
 const ProfileRouteChildren: ProfileRouteChildren = {
   ProfileUsernameRoute: ProfileUsernameRoute,
+  ProfileIndexRoute: ProfileIndexRoute,
 }
 
 const ProfileRouteWithChildren =
@@ -318,7 +324,6 @@ const ProfileRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ContestsRoute: ContestsRouteWithChildren,
   DashboardRoute: DashboardRoute,
   EnglishToCodeRoute: EnglishToCodeRoute,
   LeaderboardRoute: LeaderboardRoute,

@@ -23,8 +23,15 @@ export async function fetchLeaderboard(
       pageSize,
     });
   }
-  const { data } = await api.get<LeaderboardResponse>("/leaderboard", {
+  const response = await api.get("/leaderboard", {
     params: { page, pageSize, range },
   });
-  return data;
+  const result = response.data as any;
+  
+  return {
+    entries: result.data || [],
+    total: result.pagination?.total || 0,
+    page: result.pagination?.page || page,
+    pageSize: result.pagination?.limit || pageSize,
+  };
 }

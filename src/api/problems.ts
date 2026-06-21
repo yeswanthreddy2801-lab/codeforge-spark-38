@@ -32,10 +32,25 @@ export async function fetchProblems(
     const paged = items.slice((page - 1) * pageSize, page * pageSize);
     return mockDelay({ items: paged, total, page, pageSize });
   }
-  const { data } = await api.get<ProblemListResponse>("/problems", {
+  const { data: responseData } = await api.get<any>("/problems", {
     params: filters,
   });
-  return data;
+
+  return {
+    items: responseData.data.map((p: any) => ({
+      id: String(p.id),
+      number: p.id,
+      title: p.title,
+      slug: p.slug,
+      difficulty: p.difficulty,
+      tags: p.tags || [],
+      acceptance: p.acceptedCount && p.totalAttempts ? Math.round((p.acceptedCount / p.totalAttempts) * 100) : 0,
+      solved: p.userSolved || false,
+    })),
+    total: responseData.pagination.total,
+    page: responseData.pagination.page,
+    pageSize: responseData.pagination.limit,
+  };
 }
 
 export async function fetchProblemById(id: string): Promise<Problem> {
@@ -44,6 +59,20 @@ export async function fetchProblemById(id: string): Promise<Problem> {
     if (!found) throw new Error("Problem not found");
     return mockDelay(found);
   }
-  const { data } = await api.get<Problem>(`/problems/${id}`);
-  return data;
+  const { data: responseData } = await api.get<any>(`/problems/${id}`);
+  const p = responseData.data;
+  return {
+    id: String(p.id),
+    number: p.id,
+    title: p.title,
+    slug: p.slug,
+    difficulty: p.difficulty,
+    tags: p.tags || [],
+    acceptance: p.acceptanceRate || (p.acceptedCount && p.totalAttempts ? Math.round((p.acceptedCount / p.totalAttempts) * 100) : 0),
+    solved: p.userSolved || false,
+    description: p.statement || "",
+    examples: p.examples || [],
+    constraints: p.constraints || [],
+    starterCode: p.starterCode || {},
+  };
 }

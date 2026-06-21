@@ -22,9 +22,10 @@ export async function translateEnglishToCode(
     void english;
     return mockDelay({ code: SAMPLE_OUTPUTS[language], language }, 900);
   }
-  const { data } = await api.post<EnglishToCodeResponse>(
-    "/ai/english-to-code",
-    { english, language },
+  const { data } = await api.post<{ success: boolean; data: any; message: string }>(
+    "/ai/translate",
+    { englishContent: english, language },
   );
-  return data;
+  const result = data.data;
+  return { code: result.code, language: result.language };
 }

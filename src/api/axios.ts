@@ -1,8 +1,7 @@
 import axios from "axios";
 import { useAuthStore } from "@/store/authStore";
 
-export const USE_MOCK =
-  (import.meta.env.VITE_USE_MOCK ?? "true").toString() !== "false";
+export const USE_MOCK = false;
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL ?? "/api",
@@ -23,10 +22,7 @@ api.interceptors.response.use(
     const status = error?.response?.status;
     if (status === 401) {
       useAuthStore.getState().logout();
-      if (typeof window !== "undefined") {
-        // Soft redirect; replace with router.navigate when auth pages exist.
-        window.location.href = "/";
-      }
+      // Soft redirect removed to prevent wiping user state when auth fails on a public page.
     }
     return Promise.reject(error);
   },

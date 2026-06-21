@@ -87,7 +87,7 @@ function ProblemDetailPage() {
       <div className="overflow-hidden rounded-2xl border border-card bg-surface lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto">
         <div className="p-6">
           <div className="flex items-center gap-2 text-xs text-text-secondary">
-            <Link to="/problems" className="hover:text-text-primary">Problems</Link>
+            <Link to="/problems/" className="hover:text-text-primary">Problems</Link>
             <ChevronRight className="size-3" />
             <span className="text-text-primary">{problem.title}</span>
           </div>
