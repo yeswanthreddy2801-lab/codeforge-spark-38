@@ -9,6 +9,11 @@ export async function fetchProfile(username: string): Promise<UserProfile> {
       user: { ...MOCK_PROFILE.user, username },
     });
   }
-  const { data } = await api.get<UserProfile>(`/users/${username}`);
-  return data;
+  const { data } = await api.get<any>(`/users/${username}`);
+  return data.data;
+}
+
+export async function updateProfile(payload: { fullName?: string; bio?: string; location?: string }) {
+  const { data } = await api.patch<any>("/users/me", payload);
+  return data.data;
 }

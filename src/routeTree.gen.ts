@@ -9,8 +9,10 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ProblemsRouteImport } from './routes/problems'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as EnglishToCodeRouteImport } from './routes/english-to-code'
@@ -23,6 +25,11 @@ import { Route as ProfileUsernameRouteImport } from './routes/profile.$username'
 import { Route as ProblemsIdRouteImport } from './routes/problems.$id'
 import { Route as LearnTopicRouteImport } from './routes/learn.$topic'
 
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -31,6 +38,11 @@ const ProfileRoute = ProfileRouteImport.update({
 const ProblemsRoute = ProblemsRouteImport.update({
   id: '/problems',
   path: '/problems',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LearnRoute = LearnRouteImport.update({
@@ -95,8 +107,10 @@ export interface FileRoutesByFullPath {
   '/english-to-code': typeof EnglishToCodeRoute
   '/leaderboard': typeof LeaderboardRoute
   '/learn': typeof LearnRouteWithChildren
+  '/login': typeof LoginRoute
   '/problems': typeof ProblemsRouteWithChildren
   '/profile': typeof ProfileRouteWithChildren
+  '/signup': typeof SignupRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/problems/$id': typeof ProblemsIdRoute
   '/profile/$username': typeof ProfileUsernameRoute
@@ -109,6 +123,8 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/english-to-code': typeof EnglishToCodeRoute
   '/leaderboard': typeof LeaderboardRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/problems/$id': typeof ProblemsIdRoute
   '/profile/$username': typeof ProfileUsernameRoute
@@ -123,8 +139,10 @@ export interface FileRoutesById {
   '/english-to-code': typeof EnglishToCodeRoute
   '/leaderboard': typeof LeaderboardRoute
   '/learn': typeof LearnRouteWithChildren
+  '/login': typeof LoginRoute
   '/problems': typeof ProblemsRouteWithChildren
   '/profile': typeof ProfileRouteWithChildren
+  '/signup': typeof SignupRoute
   '/learn/$topic': typeof LearnTopicRoute
   '/problems/$id': typeof ProblemsIdRoute
   '/profile/$username': typeof ProfileUsernameRoute
@@ -140,8 +158,10 @@ export interface FileRouteTypes {
     | '/english-to-code'
     | '/leaderboard'
     | '/learn'
+    | '/login'
     | '/problems'
     | '/profile'
+    | '/signup'
     | '/learn/$topic'
     | '/problems/$id'
     | '/profile/$username'
@@ -154,6 +174,8 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/english-to-code'
     | '/leaderboard'
+    | '/login'
+    | '/signup'
     | '/learn/$topic'
     | '/problems/$id'
     | '/profile/$username'
@@ -167,8 +189,10 @@ export interface FileRouteTypes {
     | '/english-to-code'
     | '/leaderboard'
     | '/learn'
+    | '/login'
     | '/problems'
     | '/profile'
+    | '/signup'
     | '/learn/$topic'
     | '/problems/$id'
     | '/profile/$username'
@@ -183,12 +207,21 @@ export interface RootRouteChildren {
   EnglishToCodeRoute: typeof EnglishToCodeRoute
   LeaderboardRoute: typeof LeaderboardRoute
   LearnRoute: typeof LearnRouteWithChildren
+  LoginRoute: typeof LoginRoute
   ProblemsRoute: typeof ProblemsRouteWithChildren
   ProfileRoute: typeof ProfileRouteWithChildren
+  SignupRoute: typeof SignupRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -201,6 +234,13 @@ declare module '@tanstack/react-router' {
       path: '/problems'
       fullPath: '/problems'
       preLoaderRoute: typeof ProblemsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/learn': {
@@ -328,8 +368,10 @@ const rootRouteChildren: RootRouteChildren = {
   EnglishToCodeRoute: EnglishToCodeRoute,
   LeaderboardRoute: LeaderboardRoute,
   LearnRoute: LearnRouteWithChildren,
+  LoginRoute: LoginRoute,
   ProblemsRoute: ProblemsRouteWithChildren,
   ProfileRoute: ProfileRouteWithChildren,
+  SignupRoute: SignupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

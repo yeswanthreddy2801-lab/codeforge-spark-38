@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { runCode, submitCode } from "@/api/submissions";
 import { useEditorStore } from "@/store/editorStore";
 import { toast } from "sonner";
@@ -27,6 +27,8 @@ export function useRunCode() {
 export function useSubmitCode() {
   const setVerdict = useEditorStore((s) => s.setVerdict);
   const setSubmitting = useEditorStore((s) => s.setSubmitting);
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: submitCode,
     onMutate: () => {
@@ -37,6 +39,11 @@ export function useSubmitCode() {
       setVerdict(data);
       if (data.status === "Accepted") toast.success("Accepted!");
       else toast.error(data.status);
+      
+      // Invalidate queries so dashboard and problem lists update
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["problems"] });
+      queryClient.invalidateQueries({ queryKey: ["leaderboard"] });
     },
     onError: (e: Error) => toast.error(e.message),
     onSettled: () => setSubmitting(false),

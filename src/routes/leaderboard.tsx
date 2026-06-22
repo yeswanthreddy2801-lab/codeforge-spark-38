@@ -25,8 +25,9 @@ function LeaderboardPage() {
   const { data, isLoading } = useLeaderboard(page, range);
   const currentUser = useAuthStore((s) => s.user);
 
-  const top3 = data?.entries.slice(0, 3) ?? [];
-  const rest = data?.entries.slice(3) ?? [];
+  const hasPodium = (data?.entries?.length ?? 0) >= 3;
+  const top3 = hasPodium ? data!.entries.slice(0, 3) : [];
+  const rest = hasPodium ? data!.entries.slice(3) : (data?.entries ?? []);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -56,7 +57,7 @@ function LeaderboardPage() {
         <div className="mt-10 space-y-4"><TableSkeleton rows={10} /></div>
       ) : (
         <>
-          {top3.length === 3 && (
+          {hasPodium && (
             <div className="mt-12 grid grid-cols-1 items-end gap-6 md:grid-cols-3">
               <PodiumCard entry={top3[1]!} place={2} delay={0.1} />
               <PodiumCard entry={top3[0]!} place={1} delay={0} />

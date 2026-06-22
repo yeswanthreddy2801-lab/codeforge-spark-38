@@ -39,8 +39,11 @@ function ProblemDetailPage() {
 
   const language = useEditorStore((s) => s.language);
   const setLanguage = useEditorStore((s) => s.setLanguage);
-  const code = useEditorStore((s) => s.codeByProblemId[id] ?? "");
+  
+  const compositeKey = `${id}_${language}`;
+  const code = useEditorStore((s) => s.codeByProblemId[compositeKey] ?? "");
   const setCode = useEditorStore((s) => s.setCode);
+  
   const runOutput = useEditorStore((s) => s.runOutput);
   const verdict = useEditorStore((s) => s.verdict);
   const isRunning = useEditorStore((s) => s.isRunning);
@@ -49,12 +52,6 @@ function ProblemDetailPage() {
 
   const runMutation = useRunCode();
   const submitMutation = useSubmitCode();
-
-  useEffect(() => {
-    if (problem && !code) {
-      setCode(id, problem.starterCode[language] ?? "");
-    }
-  }, [problem, language, code, id, setCode]);
 
   useEffect(() => {
     if (runOutput || verdict) setConsoleOpen(true);
@@ -72,7 +69,7 @@ function ProblemDetailPage() {
   }
 
   const handleReset = () => {
-    setCode(id, problem.starterCode[language] ?? "");
+    setCode(compositeKey, problem.starterCode[language] ?? "");
     resetEditor();
   };
 
@@ -162,7 +159,6 @@ function ProblemDetailPage() {
             onChange={(e) => {
               const lang = e.target.value as Language;
               setLanguage(lang);
-              setCode(id, problem.starterCode[lang] ?? "");
             }}
             className="rounded-lg border border-card bg-surface px-3 py-1.5 text-sm text-text-primary focus:border-primary focus:outline-none"
           >
@@ -182,7 +178,7 @@ function ProblemDetailPage() {
           <MonacoEditorWrapper
             language={language}
             value={code}
-            onChange={(v) => setCode(id, v)}
+            onChange={(v) => setCode(compositeKey, v)}
           />
         </div>
 

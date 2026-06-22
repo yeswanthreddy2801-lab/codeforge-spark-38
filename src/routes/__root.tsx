@@ -9,6 +9,8 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 import { Toaster } from "sonner";
+import { supabase } from "@/lib/supabase";
+import { useAuthStore } from "@/store/authStore";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -130,6 +132,44 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const authLogin = useAuthStore((s) => s.login);
+  const authLogout = useAuthStore((s) => s.logout);
+
+  useEffect(() => {
+    // Check initial session
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      console.log("Initial getSession:", { session, error });
+      if (session) {
+        authLogin(session.access_token, {
+          id: session.user.id,
+          username: session.user.user_metadata?.username || session.user.email?.split("@")[0] || "User",
+          email: session.user.email || "",
+          joinedAt: session.user.created_at,
+        });
+      }
+    });
+
+    // Listen for auth changes (like email verification redirect)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        console.log("Supabase onAuthStateChange:", event, session);
+        if (event === "SIGNED_IN" && session) {
+          authLogin(session.access_token, {
+            id: session.user.id,
+            username: session.user.user_metadata?.username || session.user.email?.split("@")[0] || "User",
+            email: session.user.email || "",
+            joinedAt: session.user.created_at,
+          });
+        } else if (event === "SIGNED_OUT") {
+          authLogout();
+        }
+      }
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [authLogin, authLogout]);
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -37,7 +37,16 @@ function ProfilePage() {
     );
   }
 
-  const { user, stats, achievements, activity } = data;
+  const {
+    username: pUsername, fullName, bio, location, avatarUrl, joinedDate,
+    problemsSolved, totalSubmissions, accuracy, rank, streak, score,
+    recentSubmissions, difficultyBreakdown, weeklyActivity,
+    achievements
+  } = data;
+
+  const user = { username: pUsername, fullName, bio, location, avatarUrl, joinedAt: joinedDate };
+  const stats = { problemsSolved, totalSubmissions, accuracy, globalRank: rank, streak, score };
+  const activity = [] as ActivityDay[]; // Backend doesn't return full activity day array currently
 
   return (
     <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">

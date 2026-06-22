@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import type { Language, Verdict } from "@/types/submission";
 
 interface EditorState {
@@ -17,19 +18,27 @@ interface EditorState {
   reset: () => void;
 }
 
-export const useEditorStore = create<EditorState>((set) => ({
-  language: "mylang",
-  codeByProblemId: {},
-  runOutput: null,
-  verdict: null,
-  isRunning: false,
-  isSubmitting: false,
-  setLanguage: (language) => set({ language }),
-  setCode: (id, code) =>
-    set((s) => ({ codeByProblemId: { ...s.codeByProblemId, [id]: code } })),
-  setRunOutput: (runOutput) => set({ runOutput }),
-  setVerdict: (verdict) => set({ verdict }),
-  setRunning: (isRunning) => set({ isRunning }),
-  setSubmitting: (isSubmitting) => set({ isSubmitting }),
-  reset: () => set({ runOutput: null, verdict: null }),
-}));
+export const useEditorStore = create<EditorState>()(
+  persist(
+    (set) => ({
+      language: "mylang",
+      codeByProblemId: {},
+      runOutput: null,
+      verdict: null,
+      isRunning: false,
+      isSubmitting: false,
+      setLanguage: (language) => set({ language }),
+      setCode: (id, code) =>
+        set((s) => ({ codeByProblemId: { ...s.codeByProblemId, [id]: code } })),
+      setRunOutput: (runOutput) => set({ runOutput }),
+      setVerdict: (verdict) => set({ verdict }),
+      setRunning: (isRunning) => set({ isRunning }),
+      setSubmitting: (isSubmitting) => set({ isSubmitting }),
+      reset: () => set({ runOutput: null, verdict: null }),
+    }),
+    {
+      name: "codeforge-editor",
+      partialize: (state) => ({ codeByProblemId: state.codeByProblemId, language: state.language }),
+    }
+  )
+);
