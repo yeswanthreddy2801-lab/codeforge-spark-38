@@ -6,6 +6,9 @@ export const USE_MOCK = false;
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL ?? "/api",
   timeout: 30000,
+  headers: {
+    "X-Pinggy-No-Screen": "true",
+  },
 });
 
 api.interceptors.request.use((config) => {
